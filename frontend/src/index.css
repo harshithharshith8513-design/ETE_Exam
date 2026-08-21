@@ -3,18 +3,76 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  /* Theme 1: White & Emerald Mint (Light) */
+  [data-theme="light"] {
     --bg-page: #E6F7F0;
     --bg-card: #FFFFFF;
+    --border-card: #C8E6D7;
     --text-main: #0F172A;
-    --accent-primary: #F97316;
+    --text-muted: #475569;
+    --accent-primary: #10B981;
+    --bg-nav: rgba(255, 255, 255, 0.95);
+    --border-nav: rgba(16, 185, 129, 0.3);
   }
 
-  html.dark {
+  /* Theme 2: Dark Violet & Lilac (Dark) */
+  [data-theme="dark"] {
     --bg-page: #0D021A;
     --bg-card: #130924;
+    --border-card: rgba(139, 92, 246, 0.3);
     --text-main: #FFFFFF;
+    --text-muted: #CBD5E1;
     --accent-primary: #8B5CF6;
+    --bg-nav: rgba(13, 2, 26, 0.92);
+    --border-nav: rgba(139, 92, 246, 0.4);
+  }
+
+  /* Theme 3: Cyberpunk Neon Sunset (Dark) */
+  [data-theme="cyberpunk"] {
+    --bg-page: #080511;
+    --bg-card: #140D28;
+    --border-card: rgba(255, 0, 127, 0.35);
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --accent-primary: #FF007F;
+    --bg-nav: rgba(20, 13, 40, 0.92);
+    --border-nav: rgba(0, 240, 255, 0.4);
+  }
+
+  /* Theme 4: Solar Amber & Cream (Light) */
+  [data-theme="amber"] {
+    --bg-page: #FFFBEB;
+    --bg-card: #FFFFFF;
+    --border-card: #FDE68A;
+    --text-main: #451A03;
+    --text-muted: #78350F;
+    --accent-primary: #D97706;
+    --bg-nav: rgba(255, 255, 255, 0.95);
+    --border-nav: rgba(217, 119, 6, 0.35);
+  }
+
+  /* Theme 5: Oceanic Sapphire & Cyan (Dark) */
+  [data-theme="ocean"] {
+    --bg-page: #041527;
+    --bg-card: #0B2747;
+    --border-card: rgba(6, 182, 212, 0.35);
+    --text-main: #F0F9FF;
+    --text-muted: #BAE6FD;
+    --accent-primary: #06B6D4;
+    --bg-nav: rgba(11, 39, 71, 0.92);
+    --border-nav: rgba(56, 189, 248, 0.4);
+  }
+
+  /* Theme 6: Midnight Rose & Gold (Dark) */
+  [data-theme="rose"] {
+    --bg-page: #160710;
+    --bg-card: #270E1D;
+    --border-card: rgba(244, 63, 94, 0.35);
+    --text-main: #FFF1F2;
+    --text-muted: #FECDD3;
+    --accent-primary: #F43F5E;
+    --bg-nav: rgba(39, 14, 29, 0.92);
+    --border-nav: rgba(251, 113, 133, 0.4);
   }
 
   body {
@@ -25,65 +83,39 @@
 }
 
 @layer utilities {
-  /* Dynamic Glassmorphism Cards */
+  /* Dynamic Glassmorphism Cards for all 6 presets */
   .glass-card {
-    transition: all 300ms ease-in-out;
-  }
-
-  html.light .glass-card {
-    background: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.02);
-    color: #0F172A;
-  }
-
-  html.dark .glass-card {
-    background: rgba(19, 9, 36, 0.9);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    color: var(--text-main);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(139, 92, 246, 0.25);
-    box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.2);
-    color: #FFFFFF;
-  }
-
-  /* Dynamic Pill Nav */
-  .glass-pill-nav {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
     transition: all 300ms ease-in-out;
   }
 
-  html.light .glass-pill-nav {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(249, 115, 22, 0.25);
-    box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
-  }
-
-  html.dark .glass-pill-nav {
-    background: rgba(13, 2, 26, 0.92);
-    border: 1px solid rgba(139, 92, 246, 0.35);
-    box-shadow: 0 10px 30px -5px rgba(139, 92, 246, 0.3);
+  /* Dynamic Pill Nav for all 6 presets */
+  .glass-pill-nav {
+    background-color: var(--bg-nav);
+    border-color: var(--border-nav);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
+    transition: all 300ms ease-in-out;
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-html.light ::-webkit-scrollbar-track {
-  background: #E6F7F0;
-}
-html.dark ::-webkit-scrollbar-track {
-  background: #0D021A;
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
 }
 
-html.light ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 4px;
-}
-html.dark ::-webkit-scrollbar-thumb {
-  background: #3B0764;
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
   border-radius: 4px;
 }
