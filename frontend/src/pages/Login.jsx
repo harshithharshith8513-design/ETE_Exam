@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, Mail, Lock, AlertCircle, Lightbulb } from 'lucide-react';
+import { LogIn, Mail, Lock, AlertCircle, Lightbulb, ShieldCheck } from 'lucide-react';
 
 export const Login = () => {
   const { login } = useAuth();
@@ -30,9 +30,9 @@ export const Login = () => {
     }
   };
 
-  const fillDemoAccount = (demoEmail) => {
+  const fillDemoAccount = (demoEmail, demoPassword = 'password123') => {
     setEmail(demoEmail);
-    setPassword('password123');
+    setPassword(demoPassword);
   };
 
   return (
@@ -55,23 +55,31 @@ export const Login = () => {
           </div>
         )}
 
-        {/* Demo Account Fill Pill */}
+        {/* Demo Account Fill Pills */}
         <div className="p-3 bg-emerald-50/70 dark:bg-purple-950/50 rounded-2xl border border-emerald-200 dark:border-purple-500/30 text-xs text-slate-700 dark:text-slate-300 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="font-bold text-slate-900 dark:text-slate-200">Demo Accounts (Pre-seeded):</span>
+            <span className="font-bold text-slate-900 dark:text-slate-200">Pre-configured Accounts:</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-1.5">
             <button
               type="button"
-              onClick={() => fillDemoAccount('elena@innovationhub.org')}
-              className="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-mono text-[11px] font-bold shadow-sm hover:bg-emerald-700"
+              onClick={() => fillDemoAccount('admin@innovationhub.org', 'admin123')}
+              className="px-2.5 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-mono text-[11px] font-bold shadow-sm flex items-center space-x-1"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+              <span>Admin</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => fillDemoAccount('elena@innovationhub.org', 'password123')}
+              className="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-[11px] font-bold shadow-sm"
             >
               Dr. Elena
             </button>
             <button
               type="button"
-              onClick={() => fillDemoAccount('marcus@techlabs.io')}
-              className="px-2.5 py-1 rounded-lg bg-slate-200 text-slate-800 font-mono text-[11px] font-bold shadow-sm hover:bg-slate-300 dark:bg-purple-900 dark:text-purple-200"
+              onClick={() => fillDemoAccount('marcus@techlabs.io', 'password123')}
+              className="px-2.5 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-mono text-[11px] font-bold shadow-sm dark:bg-purple-900 dark:text-purple-200"
             >
               Marcus
             </button>

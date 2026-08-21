@@ -13,17 +13,14 @@ const getIdeas = async (req, res, next) => {
 
     let query = {};
 
-    // Filter by Domain
     if (domain && domain !== 'All') {
       query.domain = domain;
     }
 
-    // Filter by Status
     if (status && status !== 'All') {
       query.status = status;
     }
 
-    // Real-time Search by Title, Problem Statement, or Technologies
     if (search && search.trim() !== '') {
       const searchRegex = new RegExp(search.trim(), 'i');
       query.$or = [
@@ -34,8 +31,7 @@ const getIdeas = async (req, res, next) => {
       ];
     }
 
-    // Sorting
-    let sortOptions = { createdAt: -1 }; // Default: Newest first
+    let sortOptions = { createdAt: -1 };
     if (sort === 'oldest') {
       sortOptions = { createdAt: 1 };
     } else if (sort === 'most_voted') {
@@ -44,7 +40,7 @@ const getIdeas = async (req, res, next) => {
 
     const totalIdeas = await Idea.countDocuments(query);
     const ideas = await Idea.find(query)
-      .populate('author', 'name email')
+      .populate('author', 'name email role')
       .sort(sortOptions)
       .skip(skip)
       .limit(limit);
@@ -71,7 +67,6 @@ const getIdeaStats = async (req, res, next) => {
   try {
     const totalIdeas = await Idea.countDocuments();
 
-    // Status counts breakdown
     const statusCounts = {
       submitted: 0,
       under_review: 0,
@@ -90,7 +85,6 @@ const getIdeaStats = async (req, res, next) => {
       }
     });
 
-    // Top domains aggregation
     const domainAggregation = await Idea.aggregate([
       { $group: { _id: '$domain', count: { $sum: 1 } } },
       { $sort: { count: -1 } }
@@ -102,10 +96,9 @@ const getIdeaStats = async (req, res, next) => {
       percentage: totalIdeas > 0 ? Math.round((item.count / totalIdeas) * 100) : 0
     }));
 
-    // Top voted idea
     const topVotedIdea = await Idea.findOne()
       .sort({ votes: -1 })
-      .populate('author', 'name email')
+      .populate('author', 'name email role')
       .select('title domain votes status problemStatement');
 
     res.status(200).json({
@@ -129,7 +122,7 @@ const getIdeaById = async (req, res, next) => {
   try {
     const idea = await Idea.findById(req.params.id).populate(
       'author',
-      'name email'
+      'name email role'
     );
 
     if (!idea) {
@@ -163,7 +156,6 @@ const createIdea = async (req, res, next) => {
       status
     } = req.body;
 
-    // Check payload validation
     if (!title || !problemStatement || !description || !domain || !expectedImpact) {
       return res.status(400).json({
         success: false,
@@ -190,7 +182,6 @@ const createIdea = async (req, res, next) => {
       });
     }
 
-    // Check duplicate exact title
     const existingTitle = await Idea.findOne({
       title: { $regex: new RegExp(`^${title.trim()}$`, 'i') }
     });
@@ -215,7 +206,7 @@ const createIdea = async (req, res, next) => {
 
     const populatedIdea = await Idea.findById(idea._id).populate(
       'author',
-      'name email'
+      'name email role'
     );
 
     res.status(201).json({
@@ -242,11 +233,14 @@ const updateIdea = async (req, res, next) => {
       });
     }
 
-    // Check authorization (Author or Admin check)
-    if (idea.author.toString() !== req.user._id.toString()) {
+    // Authorization check (Author OR Admin)
+    const isAuthor = idea.author.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isAuthor && !isAdmin) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to edit this idea. Only the author can make edits.'
+        message: 'Not authorized to edit this idea. Only the author or system admin can make edits.'
       });
     }
 
@@ -260,7 +254,6 @@ const updateIdea = async (req, res, next) => {
       status
     } = req.body;
 
-    // Check duplicate title if title changed
     if (title && title.trim().toLowerCase() !== idea.title.toLowerCase()) {
       const existingTitle = await Idea.findOne({
         title: { $regex: new RegExp(`^${title.trim()}$`, 'i') }
@@ -302,7 +295,7 @@ const updateIdea = async (req, res, next) => {
 
     const updatedIdea = await Idea.findById(idea._id).populate(
       'author',
-      'name email'
+      'name email role'
     );
 
     res.status(200).json({
@@ -329,11 +322,14 @@ const deleteIdea = async (req, res, next) => {
       });
     }
 
-    // Authorization check
-    if (idea.author.toString() !== req.user._id.toString()) {
+    // Authorization check (Author OR Admin)
+    const isAuthor = idea.author.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isAuthor && !isAdmin) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to delete this idea. Only the author can delete it.'
+        message: 'Not authorized to delete this idea. Only the author or system admin can delete it.'
       });
     }
 
@@ -351,7 +347,7 @@ const deleteIdea = async (req, res, next) => {
 
 // @desc    Vote / Toggle vote for an idea
 // @route   POST /api/ideas/:id/vote
-// @access  Public (supports session hash or logged in user)
+// @access  Public
 const voteIdea = async (req, res, next) => {
   try {
     const idea = await Idea.findById(req.params.id);
@@ -363,24 +359,21 @@ const voteIdea = async (req, res, next) => {
       });
     }
 
-    // Determine voter key: logged in user ID or session voterId passed in body
     const voterKey = req.user ? req.user._id.toString() : req.body.voterId;
 
     if (!voterKey) {
       return res.status(400).json({
         success: false,
-        message: 'Voter identification key (user ID or session voterId) required'
+        message: 'Voter identification key required'
       });
     }
 
     const hasVoted = idea.votedBy.includes(voterKey);
 
     if (hasVoted) {
-      // Toggle vote off (decrement)
       idea.votedBy = idea.votedBy.filter((id) => id !== voterKey);
       idea.votes = Math.max(0, idea.votes - 1);
     } else {
-      // Toggle vote on (increment)
       idea.votedBy.push(voterKey);
       idea.votes += 1;
     }
