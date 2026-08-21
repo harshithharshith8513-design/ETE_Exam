@@ -15,7 +15,8 @@ import {
   Sparkles,
   ChevronDown,
   Menu,
-  X
+  X,
+  ShieldCheck
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -28,6 +29,7 @@ export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActive = (path) => location.pathname === path;
+  const isAdmin = user && user.role === 'admin';
 
   return (
     <nav className="sticky top-0 z-50 glass-pill-nav border-b border-emerald-200/60 dark:border-purple-500/30 transition-all duration-300">
@@ -186,14 +188,25 @@ export const Navbar = () => {
             {isAuthenticated ? (
               <div className="flex items-center space-x-3 border-l border-slate-300 dark:border-purple-500/30 pl-3">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">
+                  <div className={`w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs shadow-md ${
+                    isAdmin ? 'bg-purple-600 text-white ring-2 ring-amber-400' : 'bg-emerald-600 text-white'
+                  }`}>
                     {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                   </div>
                   <div className="text-left leading-tight">
-                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100 max-w-[120px] truncate">
-                      {user?.name}
+                    <div className="flex items-center space-x-1">
+                      <p className="text-xs font-black text-slate-900 dark:text-slate-100 max-w-[110px] truncate">
+                        {user?.name}
+                      </p>
+                      {isAdmin && (
+                        <ShieldCheck className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" title="System Admin" />
+                      )}
+                    </div>
+                    <p className={`text-[10px] font-extrabold ${
+                      isAdmin ? 'text-amber-600 dark:text-amber-400 uppercase tracking-wider' : 'text-slate-500 dark:text-purple-300'
+                    }`}>
+                      {isAdmin ? 'System Admin' : 'Author'}
                     </p>
-                    <p className="text-[10px] font-semibold text-slate-500 dark:text-purple-300">Author</p>
                   </div>
                 </div>
                 <button

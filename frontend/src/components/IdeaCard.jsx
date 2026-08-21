@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bookmark, Eye, Edit3, Trash2, Zap, Cpu, User } from 'lucide-react';
+import { Bookmark, Eye, Edit3, Trash2, Zap, Cpu, User, ShieldCheck } from 'lucide-react';
 import { VoteButton } from './VoteButton';
 import { useAuth } from '../context/AuthContext';
 import { useBookmarks } from '../hooks/useBookmarks';
@@ -32,6 +32,8 @@ export const IdeaCard = ({ idea, onDelete, onVoteChange }) => {
   if (!idea) return null;
 
   const isAuthor = user && idea.author && (user._id === idea.author._id || user._id === idea.author);
+  const isAdmin = user && user.role === 'admin';
+  const canManage = isAuthor || isAdmin;
   const bookmarked = isBookmarked(idea._id);
 
   const statusStyle = STATUS_CONFIG[idea.status] || STATUS_CONFIG.submitted;
@@ -40,21 +42,21 @@ export const IdeaCard = ({ idea, onDelete, onVoteChange }) => {
   const handleDelete = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (window.confirm(`Are you sure you want to delete "${idea.title}"?`)) {
+    if (window.confirm(`[Admin/Author] Are you sure you want to delete "${idea.title}"?`)) {
       if (onDelete) onDelete(idea._id);
     }
   };
 
   return (
-    <div className="glass-card rounded-3xl p-6 border transition-all duration-300 flex flex-col justify-between group hover:shadow-xl dark:hover:border-purple-500/50 hover:border-orange-500/40">
+    <div className="glass-card rounded-3xl p-6 border transition-all duration-300 flex flex-col justify-between group hover:shadow-xl dark:hover:border-purple-500/50 hover:border-emerald-500/40 relative">
       <div>
         {/* Top Header Row: Domain Badge & Status Badge & Bookmark Button */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-            <span className={`text-xs font-bold px-3 py-1 rounded-full border ${domainStyle}`}>
+            <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${domainStyle}`}>
               {idea.domain}
             </span>
-            <span className={`text-xs font-bold px-3 py-1 rounded-full border ${statusStyle.style}`}>
+            <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${statusStyle.style}`}>
               {statusStyle.label}
             </span>
           </div>
@@ -67,7 +69,7 @@ export const IdeaCard = ({ idea, onDelete, onVoteChange }) => {
             }}
             className={`p-1.5 rounded-xl border transition-colors ${
               bookmarked
-                ? 'bg-amber-100 text-amber-700 border-amber-400 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40'
+                ? 'bg-amber-100 text-amber-800 border-amber-400 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40'
                 : 'bg-slate-100 text-slate-500 border-slate-200 hover:text-slate-900 dark:bg-slate-800/60 dark:text-slate-400 dark:border-slate-700 dark:hover:text-white'
             }`}
             title={bookmarked ? 'Remove Bookmark' : 'Bookmark Idea'}
@@ -77,14 +79,14 @@ export const IdeaCard = ({ idea, onDelete, onVoteChange }) => {
         </div>
 
         {/* Title */}
-        <Link to={`/ideas/${idea._id}`} className="block group-hover:text-orange-600 dark:group-hover:text-purple-300 transition-colors">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug mb-2">
+        <Link to={`/ideas/${idea._id}`} className="block group-hover:text-emerald-700 dark:group-hover:text-purple-300 transition-colors">
+          <h3 className="text-lg font-black text-slate-900 dark:text-white line-clamp-2 leading-snug mb-2">
             {idea.title}
           </h3>
         </Link>
 
         {/* Problem Statement Snippet */}
-        <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 mb-4 leading-relaxed font-normal">
+        <p className="text-sm text-slate-700 dark:text-slate-300 line-clamp-2 mb-4 leading-relaxed font-semibold">
           {idea.problemStatement}
         </p>
 
@@ -93,26 +95,26 @@ export const IdeaCard = ({ idea, onDelete, onVoteChange }) => {
           {idea.technologies && idea.technologies.slice(0, 4).map((tech, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center space-x-1 text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 dark:bg-purple-950/60 dark:text-purple-200 dark:border-purple-500/30"
+              className="inline-flex items-center space-x-1 text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 dark:bg-purple-950/60 dark:text-purple-200 dark:border-purple-500/30"
             >
-              <Cpu className="w-3 h-3 text-orange-500 dark:text-purple-400" />
+              <Cpu className="w-3 h-3 text-emerald-600 dark:text-purple-400" />
               <span>{tech}</span>
             </span>
           ))}
           {idea.technologies && idea.technologies.length > 4 && (
-            <span className="text-[11px] text-slate-500 dark:text-slate-400 self-center font-medium">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 self-center font-bold">
               +{idea.technologies.length - 4} more
             </span>
           )}
         </div>
 
         {/* Expected Impact Highlight */}
-        <div className="rounded-2xl p-3.5 border mb-4 bg-emerald-50/70 border-emerald-200 text-slate-800 dark:bg-purple-950/40 dark:border-purple-500/30 dark:text-slate-200">
-          <div className="flex items-center space-x-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 mb-1">
+        <div className="rounded-2xl p-3.5 border mb-4 bg-emerald-50/70 border-emerald-200 text-slate-900 dark:bg-purple-950/40 dark:border-purple-500/30 dark:text-slate-200">
+          <div className="flex items-center space-x-1.5 text-xs font-black text-emerald-800 dark:text-emerald-400 mb-1">
             <Zap className="w-3.5 h-3.5" />
             <span>Expected Impact</span>
           </div>
-          <p className="text-xs text-slate-700 dark:text-purple-200 line-clamp-2 font-medium">
+          <p className="text-xs text-slate-800 dark:text-purple-200 line-clamp-2 font-bold">
             {idea.expectedImpact}
           </p>
         </div>
@@ -121,7 +123,7 @@ export const IdeaCard = ({ idea, onDelete, onVoteChange }) => {
       {/* Footer Row: Author, Vote Button, Action triggers */}
       <div className="pt-3 border-t border-slate-200 dark:border-purple-500/20 flex items-center justify-between">
         {/* Author info */}
-        <div className="flex items-center space-x-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+        <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 dark:text-slate-400">
           <User className="w-3.5 h-3.5 text-slate-400" />
           <span className="max-w-[100px] truncate">
             {idea.author?.name || 'Anonymous'}
@@ -140,25 +142,25 @@ export const IdeaCard = ({ idea, onDelete, onVoteChange }) => {
           <div className="flex items-center space-x-1 border-l border-slate-200 dark:border-slate-800 pl-2">
             <Link
               to={`/ideas/${idea._id}`}
-              className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-purple-900/40 rounded-lg transition-colors"
+              className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-purple-900/40 rounded-lg transition-colors"
               title="View Details"
             >
               <Eye className="w-4 h-4" />
             </Link>
 
-            {isAuthor && (
+            {canManage && (
               <>
                 <Link
                   to={`/ideas/${idea._id}/edit`}
-                  className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:text-slate-400 dark:hover:text-amber-300 dark:hover:bg-purple-900/40 rounded-lg transition-colors"
-                  title="Edit Idea"
+                  className="p-1.5 text-amber-700 hover:text-amber-900 hover:bg-amber-100 dark:text-amber-300 dark:hover:bg-purple-900/40 rounded-lg transition-colors"
+                  title={isAdmin ? "Admin Edit" : "Edit Idea"}
                 >
                   <Edit3 className="w-4 h-4" />
                 </Link>
                 <button
                   onClick={handleDelete}
-                  className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
-                  title="Delete Idea"
+                  className="p-1.5 text-rose-700 hover:text-rose-900 hover:bg-rose-100 dark:text-rose-400 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
+                  title={isAdmin ? "Admin Delete" : "Delete Idea"}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
