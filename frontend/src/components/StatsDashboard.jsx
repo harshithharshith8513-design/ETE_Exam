@@ -1,0 +1,122 @@
+import React from 'react';
+import { Lightbulb, TrendingUp, Layers, Award } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+export const StatsDashboard = ({ stats, loading }) => {
+  if (loading) {
+    return (
+      <div className="glass-card rounded-3xl p-5 border animate-pulse space-y-4">
+        <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded w-1/2"></div>
+        <div className="h-20 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+        <div className="h-32 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+      </div>
+    );
+  }
+
+  if (!stats) return null;
+
+  const { totalIdeas = 0, statusCounts = {}, topDomains = [], topVotedIdea = null } = stats;
+
+  const STATUS_CONFIG = [
+    { key: 'submitted', label: 'Submitted', color: 'bg-slate-500' },
+    { key: 'under_review', label: 'Under Review', color: 'bg-amber-500' },
+    { key: 'approved', label: 'Approved', color: 'bg-blue-500' },
+    { key: 'prototype', label: 'Prototype', color: 'bg-purple-500' },
+    { key: 'implemented', label: 'Implemented', color: 'bg-emerald-500' }
+  ];
+
+  return (
+    <div className="space-y-4">
+      {/* Total Ideas Stat Banner */}
+      <div className="glass-card rounded-3xl p-5 border border-emerald-200 dark:border-purple-500/30 bg-white dark:bg-[#130924] shadow-lg">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-black uppercase tracking-wider text-emerald-800 dark:text-purple-300">
+            Total Pipeline Ideas
+          </span>
+          <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-purple-950/80 border border-emerald-300 dark:border-purple-500/40 flex items-center justify-center text-emerald-700 dark:text-purple-300">
+            <Lightbulb className="w-4 h-4" />
+          </div>
+        </div>
+        <div className="flex items-baseline space-x-2">
+          <span className="text-4xl font-black text-slate-900 dark:text-white">{totalIdeas}</span>
+          <span className="text-xs font-bold text-slate-600 dark:text-slate-400">active submissions</span>
+        </div>
+      </div>
+
+      {/* Status Breakdown Box */}
+      <div className="glass-card rounded-3xl p-5 border border-emerald-200 dark:border-purple-500/30 bg-white dark:bg-[#130924] shadow-lg">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center space-x-2">
+            <Layers className="w-4 h-4 text-emerald-600 dark:text-purple-400" />
+            <span>Workflow Statuses</span>
+          </h4>
+        </div>
+
+        <div className="space-y-3">
+          {STATUS_CONFIG.map((status) => {
+            const count = statusCounts[status.key] || 0;
+            const pct = totalIdeas > 0 ? Math.round((count / totalIdeas) * 100) : 0;
+            return (
+              <div key={status.key} className="space-y-1">
+                <div className="flex items-center justify-between text-xs font-bold">
+                  <span className="text-slate-800 dark:text-slate-200">{status.label}</span>
+                  <span className="text-slate-600 dark:text-slate-400">{count} ({pct}%)</span>
+                </div>
+                <div className="w-full h-2 bg-slate-100 dark:bg-purple-950 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full ${status.color} transition-all duration-500`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Top Domains Breakdown */}
+      <div className="glass-card rounded-3xl p-5 border border-emerald-200 dark:border-purple-500/30 bg-white dark:bg-[#130924] shadow-lg">
+        <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center space-x-2 mb-3">
+          <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <span>Top Innovation Domains</span>
+        </h4>
+        <div className="space-y-2">
+          {topDomains.slice(0, 4).map((d, idx) => (
+            <div
+              key={idx}
+              className="flex items-center justify-between p-2.5 rounded-2xl bg-emerald-50/60 dark:bg-purple-950/40 border border-emerald-200/80 dark:border-purple-500/20 text-xs"
+            >
+              <span className="font-bold text-slate-900 dark:text-purple-200">{d.domain}</span>
+              <div className="flex items-center space-x-2">
+                <span className="font-black text-emerald-700 dark:text-purple-300">{d.count} ideas</span>
+                <span className="text-[10px] text-slate-700 dark:text-purple-200 font-bold px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-purple-900/60">
+                  {d.percentage}%
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Top Voted Idea Highlight */}
+      {topVotedIdea && (
+        <div className="glass-card rounded-3xl p-4 border border-amber-300 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-950/20 shadow-lg">
+          <div className="flex items-center space-x-1.5 text-xs font-black text-amber-700 dark:text-amber-400 mb-2">
+            <Award className="w-4 h-4" />
+            <span>Community Choice #1</span>
+          </div>
+          <Link
+            to={`/ideas/${topVotedIdea._id}`}
+            className="text-sm font-black text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-amber-300 line-clamp-2 transition-colors"
+          >
+            {topVotedIdea.title}
+          </Link>
+          <div className="flex items-center justify-between mt-2 pt-2 border-t border-amber-200 dark:border-purple-500/20 text-xs text-slate-700 dark:text-slate-400">
+            <span className="font-bold">{topVotedIdea.domain}</span>
+            <span className="font-black text-amber-700 dark:text-amber-300">{topVotedIdea.votes} Votes</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
