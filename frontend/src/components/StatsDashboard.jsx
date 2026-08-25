@@ -6,9 +6,9 @@ export const StatsDashboard = ({ stats, loading }) => {
   if (loading) {
     return (
       <div className="glass-card rounded-3xl p-5 border animate-pulse space-y-4">
-        <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded w-1/2"></div>
-        <div className="h-20 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
-        <div className="h-32 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+        <div className="h-6 bg-white/10 rounded w-1/2"></div>
+        <div className="h-20 bg-white/10 rounded-xl"></div>
+        <div className="h-32 bg-white/10 rounded-xl"></div>
       </div>
     );
   }
@@ -28,26 +28,26 @@ export const StatsDashboard = ({ stats, loading }) => {
   return (
     <div className="space-y-4">
       {/* Total Ideas Stat Banner */}
-      <div className="glass-card rounded-3xl p-5 border border-emerald-200 dark:border-purple-500/30 bg-white dark:bg-[#130924] shadow-lg">
+      <div className="glass-card rounded-3xl p-5 border shadow-lg">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-black uppercase tracking-wider text-emerald-800 dark:text-purple-300">
+          <span className="text-xs font-black uppercase tracking-wider theme-text-muted">
             Total Pipeline Ideas
           </span>
-          <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-purple-950/80 border border-emerald-300 dark:border-purple-500/40 flex items-center justify-center text-emerald-700 dark:text-purple-300">
-            <Lightbulb className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-xl theme-badge flex items-center justify-center">
+            <Lightbulb className="w-4 h-4 opacity-90" />
           </div>
         </div>
         <div className="flex items-baseline space-x-2">
-          <span className="text-4xl font-black text-slate-900 dark:text-white">{totalIdeas}</span>
-          <span className="text-xs font-bold text-slate-600 dark:text-slate-400">active submissions</span>
+          <span className="text-4xl font-black theme-text-main">{totalIdeas}</span>
+          <span className="text-xs font-bold theme-text-muted">active submissions</span>
         </div>
       </div>
 
       {/* Status Breakdown Box */}
-      <div className="glass-card rounded-3xl p-5 border border-emerald-200 dark:border-purple-500/30 bg-white dark:bg-[#130924] shadow-lg">
+      <div className="glass-card rounded-3xl p-5 border shadow-lg">
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center space-x-2">
-            <Layers className="w-4 h-4 text-emerald-600 dark:text-purple-400" />
+          <h4 className="text-sm font-black theme-text-main flex items-center space-x-2">
+            <Layers className="w-4 h-4 opacity-90" />
             <span>Workflow Statuses</span>
           </h4>
         </div>
@@ -59,10 +59,10 @@ export const StatsDashboard = ({ stats, loading }) => {
             return (
               <div key={status.key} className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-slate-800 dark:text-slate-200">{status.label}</span>
-                  <span className="text-slate-600 dark:text-slate-400">{count} ({pct}%)</span>
+                  <span className="theme-text-main">{status.label}</span>
+                  <span className="theme-text-muted">{count} ({pct}%)</span>
                 </div>
-                <div className="w-full h-2 bg-slate-100 dark:bg-purple-950 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
                   <div
                     className={`h-full ${status.color} transition-all duration-500`}
                     style={{ width: `${pct}%` }}
@@ -75,21 +75,21 @@ export const StatsDashboard = ({ stats, loading }) => {
       </div>
 
       {/* Top Domains Breakdown */}
-      <div className="glass-card rounded-3xl p-5 border border-emerald-200 dark:border-purple-500/30 bg-white dark:bg-[#130924] shadow-lg">
-        <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center space-x-2 mb-3">
-          <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+      <div className="glass-card rounded-3xl p-5 border shadow-lg">
+        <h4 className="text-sm font-black theme-text-main flex items-center space-x-2 mb-3">
+          <TrendingUp className="w-4 h-4 opacity-90" />
           <span>Top Innovation Domains</span>
         </h4>
         <div className="space-y-2">
           {topDomains.slice(0, 4).map((d, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-2.5 rounded-2xl bg-emerald-50/60 dark:bg-purple-950/40 border border-emerald-200/80 dark:border-purple-500/20 text-xs"
+              className="flex items-center justify-between p-2.5 rounded-2xl theme-badge text-xs"
             >
-              <span className="font-bold text-slate-900 dark:text-purple-200">{d.domain}</span>
+              <span className="font-bold theme-text-main">{d.domain}</span>
               <div className="flex items-center space-x-2">
-                <span className="font-black text-emerald-700 dark:text-purple-300">{d.count} ideas</span>
-                <span className="text-[10px] text-slate-700 dark:text-purple-200 font-bold px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-purple-900/60">
+                <span className="font-black theme-text-main">{d.count} ideas</span>
+                <span className="text-[10px] theme-text-main font-bold px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10">
                   {d.percentage}%
                 </span>
               </div>
@@ -100,20 +100,20 @@ export const StatsDashboard = ({ stats, loading }) => {
 
       {/* Top Voted Idea Highlight */}
       {topVotedIdea && (
-        <div className="glass-card rounded-3xl p-4 border border-amber-300 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-950/20 shadow-lg">
-          <div className="flex items-center space-x-1.5 text-xs font-black text-amber-700 dark:text-amber-400 mb-2">
+        <div className="glass-card rounded-3xl p-4 border theme-badge shadow-lg">
+          <div className="flex items-center space-x-1.5 text-xs font-black mb-2 opacity-90">
             <Award className="w-4 h-4" />
             <span>Community Choice #1</span>
           </div>
           <Link
             to={`/ideas/${topVotedIdea._id}`}
-            className="text-sm font-black text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-amber-300 line-clamp-2 transition-colors"
+            className="text-sm font-black theme-text-main hover:opacity-80 line-clamp-2 transition-colors"
           >
             {topVotedIdea.title}
           </Link>
-          <div className="flex items-center justify-between mt-2 pt-2 border-t border-amber-200 dark:border-purple-500/20 text-xs text-slate-700 dark:text-slate-400">
+          <div className="flex items-center justify-between mt-2 pt-2 border-t border-black/10 dark:border-white/10 text-xs theme-text-muted">
             <span className="font-bold">{topVotedIdea.domain}</span>
-            <span className="font-black text-amber-700 dark:text-amber-300">{topVotedIdea.votes} Votes</span>
+            <span className="font-black">{topVotedIdea.votes} Votes</span>
           </div>
         </div>
       )}

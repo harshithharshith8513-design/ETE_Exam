@@ -16,7 +16,7 @@ export const WorkflowStatusStepper = ({ currentStatus = 'submitted' }) => {
     <div className="w-full py-4">
       <div className="flex items-center justify-between relative">
         {/* Background Connector Line */}
-        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-800 -translate-y-1/2 z-0" />
+        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-300 dark:bg-slate-800 -translate-y-1/2 z-0" />
         
         {/* Active Connector Progress Line */}
         <div
@@ -36,10 +36,10 @@ export const WorkflowStatusStepper = ({ currentStatus = 'submitted' }) => {
               <div
                 className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                   isCompleted
-                    ? 'bg-emerald-500 text-slate-950 ring-4 ring-emerald-500/20 shadow-md shadow-emerald-500/30'
+                    ? 'bg-emerald-500 text-white dark:text-slate-950 ring-4 ring-emerald-500/20 shadow-md shadow-emerald-500/30'
                     : isCurrent
                     ? 'bg-indigo-600 text-white ring-4 ring-indigo-500/30 shadow-lg shadow-indigo-500/40 animate-pulse'
-                    : 'bg-slate-800 text-slate-500 border border-slate-700'
+                    : 'bg-slate-100 text-slate-400 border border-slate-300 dark:bg-slate-800 dark:text-slate-500 dark:border-slate-700'
                 }`}
               >
                 {isCompleted ? (
@@ -51,10 +51,10 @@ export const WorkflowStatusStepper = ({ currentStatus = 'submitted' }) => {
               <span
                 className={`mt-2 text-xs font-semibold whitespace-nowrap transition-colors ${
                   isCurrent
-                    ? 'text-indigo-400 font-bold'
+                    ? 'text-indigo-600 dark:text-indigo-400 font-extrabold'
                     : isCompleted
-                    ? 'text-emerald-400'
-                    : 'text-slate-500'
+                    ? 'text-emerald-700 dark:text-emerald-400 font-bold'
+                    : 'text-slate-500 dark:text-slate-400'
                 }`}
               >
                 {step.label}

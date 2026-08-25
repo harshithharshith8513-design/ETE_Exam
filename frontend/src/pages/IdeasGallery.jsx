@@ -79,17 +79,17 @@ export const IdeasGallery = () => {
       {/* Header section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card rounded-3xl p-6 border shadow-lg">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white flex items-center space-x-2">
-            <Grid className="w-6 h-6 text-orange-500 dark:text-purple-400" />
+          <h1 className="text-2xl font-black theme-text-main flex items-center space-x-2">
+            <Grid className="w-6 h-6 opacity-90" />
             <span>Innovation Gallery Feed</span>
           </h1>
-          <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1">
+          <p className="text-sm font-medium theme-text-muted mt-1">
             Browse all user-submitted ideas, sort by community votes, or filter by engineering domain.
           </p>
         </div>
 
         <div className="flex items-center space-x-2">
-          <span className="text-xs font-extrabold px-3.5 py-1.5 rounded-full bg-orange-100 text-orange-800 border border-orange-200 dark:bg-purple-950/80 dark:text-purple-200 dark:border-purple-500/40">
+          <span className="text-xs font-extrabold px-3.5 py-1.5 rounded-full theme-badge">
             {totalIdeasCount} Total Proposals
           </span>
         </div>

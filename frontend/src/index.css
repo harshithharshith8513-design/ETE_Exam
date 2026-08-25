@@ -13,18 +13,28 @@
     --accent-primary: #10B981;
     --bg-nav: rgba(255, 255, 255, 0.95);
     --border-nav: rgba(16, 185, 129, 0.3);
+    --bg-input: #FFFFFF;
+    --text-input: #0F172A;
+    --border-input: #CBD5E1;
+    --badge-bg: #D1FAE5;
+    --badge-text: #065F46;
   }
 
   /* Theme 2: Dark Violet & Lilac (Dark) */
   [data-theme="dark"] {
     --bg-page: #0D021A;
     --bg-card: #130924;
-    --border-card: rgba(139, 92, 246, 0.3);
+    --border-card: rgba(139, 92, 246, 0.35);
     --text-main: #FFFFFF;
     --text-muted: #CBD5E1;
     --accent-primary: #8B5CF6;
     --bg-nav: rgba(13, 2, 26, 0.92);
     --border-nav: rgba(139, 92, 246, 0.4);
+    --bg-input: #1C0F38;
+    --text-input: #FFFFFF;
+    --border-input: rgba(139, 92, 246, 0.4);
+    --badge-bg: #2E1065;
+    --badge-text: #E9D5FF;
   }
 
   /* Theme 3: Cyberpunk Neon Sunset (Dark) */
@@ -37,6 +47,11 @@
     --accent-primary: #FF007F;
     --bg-nav: rgba(20, 13, 40, 0.92);
     --border-nav: rgba(0, 240, 255, 0.4);
+    --bg-input: #1E123B;
+    --text-input: #F8FAFC;
+    --border-input: rgba(255, 0, 127, 0.4);
+    --badge-bg: #37001E;
+    --badge-text: #FF77C2;
   }
 
   /* Theme 4: Solar Amber & Cream (Light) */
@@ -49,6 +64,11 @@
     --accent-primary: #D97706;
     --bg-nav: rgba(255, 255, 255, 0.95);
     --border-nav: rgba(217, 119, 6, 0.35);
+    --bg-input: #FFFFFF;
+    --text-input: #451A03;
+    --border-input: #FDE68A;
+    --badge-bg: #FEF3C7;
+    --badge-text: #92400E;
   }
 
   /* Theme 5: Oceanic Sapphire & Cyan (Dark) */
@@ -61,6 +81,11 @@
     --accent-primary: #06B6D4;
     --bg-nav: rgba(11, 39, 71, 0.92);
     --border-nav: rgba(56, 189, 248, 0.4);
+    --bg-input: #0F355E;
+    --text-input: #F0F9FF;
+    --border-input: rgba(6, 182, 212, 0.4);
+    --badge-bg: #083344;
+    --badge-text: #67E8F9;
   }
 
   /* Theme 6: Midnight Rose & Gold (Dark) */
@@ -73,6 +98,11 @@
     --accent-primary: #F43F5E;
     --bg-nav: rgba(39, 14, 29, 0.92);
     --border-nav: rgba(251, 113, 133, 0.4);
+    --bg-input: #38152B;
+    --text-input: #FFF1F2;
+    --border-input: rgba(244, 63, 94, 0.4);
+    --badge-bg: #4C0519;
+    --badge-text: #FDA4AF;
   }
 
   body {
@@ -102,6 +132,27 @@
     -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
     transition: all 300ms ease-in-out;
+  }
+
+  /* Theme helper utilities */
+  .theme-text-main {
+    color: var(--text-main);
+  }
+
+  .theme-text-muted {
+    color: var(--text-muted);
+  }
+
+  .theme-input {
+    background-color: var(--bg-input);
+    color: var(--text-input);
+    border-color: var(--border-input);
+  }
+
+  .theme-badge {
+    background-color: var(--badge-bg);
+    color: var(--badge-text);
+    border-color: var(--border-card);
   }
 }
 
